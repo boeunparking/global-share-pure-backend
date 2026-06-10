@@ -1,4 +1,4 @@
-// .. 
+// ..
 import dotenv from "dotenv";
 dotenv.config();
 
@@ -44,7 +44,7 @@ router.post("/api/upload/presigned-url", async (req, res) => {
          ON u.email = f.user_email AND f.is_deleted = FALSE
        WHERE u.email = ?
        GROUP BY u.max_storage_size`,
-      [userEmail]
+      [userEmail],
     );
 
     if (rows.length > 0) {

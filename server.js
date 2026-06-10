@@ -122,7 +122,9 @@ app.post("/api/files/upload-success", async (req, res) => {
 
   // 필수 인자값 확인
   if (!userId || !fileName || !s3Url || !fileSize) {
-    return res.status(400).json({ error: "파일 기록에 필요한 필수 정보가 누락되었습니다." });
+    return res
+      .status(400)
+      .json({ error: "파일 기록에 필요한 필수 정보가 누락되었습니다." });
   }
 
   try {
@@ -137,9 +139,9 @@ app.post("/api/files/upload-success", async (req, res) => {
       WHERE u.user_id = ?
       GROUP BY u.user_id, u.max_storage_size;
     `;
-    
+
     const [rows] = await db.query(verifyQuery, [userId]);
-    
+
     if (rows.length === 0) {
       return res.status(404).json({ error: "존재하지 않는 유저입니다." });
     }
@@ -148,9 +150,9 @@ app.post("/api/files/upload-success", async (req, res) => {
 
     // 남은 용량보다 새로 올릴 파일의 크기가 더 크다면 예외 처리
     if (fileSize > remaining_size) {
-      return res.status(400).json({ 
+      return res.status(400).json({
         error: "개인 저장 공간이 부족하여 파일을 등록할 수 없습니다.",
-        remainingSize: remaining_size 
+        remainingSize: remaining_size,
       });
     }
 
@@ -163,15 +165,15 @@ app.post("/api/files/upload-success", async (req, res) => {
 
     res.status(200).json({
       success: true,
-      message: "파일이 성공적으로 기록되었으며 용량이 반영되었습니다."
+      message: "파일이 성공적으로 기록되었으며 용량이 반영되었습니다.",
     });
-
   } catch (error) {
     console.error("파일 업로드 기록 중 서버 에러:", error);
-    res.status(500).json({ error: "데이터베이스 처리 중 에러가 발생했습니다." });
+    res
+      .status(500)
+      .json({ error: "데이터베이스 처리 중 에러가 발생했습니다." });
   }
 });
-
 
 app.get("/api/health", (req, res) => {
   res.json({ status: "ok" });
